@@ -1,0 +1,61 @@
+group 'com.diyiliu'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+apply plugin: 'java'
+apply plugin: 'idea'
+
+compileJava {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+}
+
+compileTestJava {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+ext {
+    jacksonVersion = '2.7.3'
+    httpclientVersion = '4.5.2'
+    junitVersion = '4.12'
+}
+
+dependencies {
+    compile(
+            //jackson
+            "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion",
+            //httplient
+            "org.apache.httpcomponents:httpclient:$httpclientVersion"
+    )
+
+    testCompile(
+            "junit:junit:$junitVersion",
+    )
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'com.diyiliu.ui.Show',
+        )
+    }
+
+    // '胖'打包（包含所有jar）
+    from {
+        configurations.compile.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
